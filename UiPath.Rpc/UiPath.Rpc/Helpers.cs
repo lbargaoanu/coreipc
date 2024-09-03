@@ -1,6 +1,6 @@
 ﻿using Microsoft.IO;
 using System.IO.Pipes;
-#if NET461
+#if NET462
 using System.Net;
 using System.Net.Sockets;
 #endif
@@ -12,7 +12,7 @@ using static CancellationTokenSourcePool;
 public static class Helpers
 {
     public const BindingFlags InstanceFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly;
-#if NET461
+#if NET462
     public static CancellationTokenRegistration UnsafeRegister(this CancellationToken token, Action<object> callback, object state)
     {
         using (ExecutionContext.SuppressFlow())
@@ -91,7 +91,7 @@ public static class IOHelpers
     internal const int HeaderLength = sizeof(int) + 1;
     internal static NamedPipeServerStream NewNamedPipeServerStream(string pipeName, PipeDirection direction, int maxNumberOfServerInstances, PipeTransmissionMode transmissionMode, PipeOptions options, Func<PipeSecurity> pipeSecurity)
     {
-#if NET461
+#if NET462
         return new(pipeName, direction, maxNumberOfServerInstances, transmissionMode, options, inBufferSize: 0, outBufferSize: 0, pipeSecurity());
 #elif WINDOWS
         return NamedPipeServerStreamAcl.Create(pipeName, direction, maxNumberOfServerInstances, transmissionMode, options, inBufferSize: 0, outBufferSize: 0, pipeSecurity());
@@ -152,7 +152,7 @@ public static class IOHelpers
         // https://github.com/dotnet/runtime/blob/85441ce69b81dfd5bf57b9d00ba525440b7bb25d/src/libraries/System.Private.CoreLib/src/System/BitConverter.cs#L133
         Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(buffer[1..]), payloadLength);
         var resultTask = data.CopyToAsync(stream, 0, cancellationToken);
-#if !NET461
+#if !NET462
         if (resultTask.IsCompletedSuccessfully)
         {
             data.Dispose();
@@ -160,7 +160,7 @@ public static class IOHelpers
         }
 #endif
         return CompleteAsync(data, resultTask);
-#if !NET461
+#if !NET462
         [AsyncMethodBuilder(typeof(PoolingAsyncValueTaskMethodBuilder))]
 #endif
         static async ValueTask CompleteAsync(RecyclableMemoryStream recyclableStream, Task resultTask)

@@ -67,7 +67,7 @@ public class NestedStream : Stream
         _remainingBytes -= bytesRead;
         return bytesRead;
     }
-#if !NET461
+#if !NET462
     public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
     {
         if (buffer.Length > _remainingBytes)

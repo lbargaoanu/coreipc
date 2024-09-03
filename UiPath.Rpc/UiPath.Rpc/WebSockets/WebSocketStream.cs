@@ -18,7 +18,7 @@ public class WebSocketStream : Stream
     /// <inheritdoc />
     public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
         (await _webSocket.ReceiveAsync(new(buffer, offset, count), cancellationToken).ConfigureAwait(false)).Count;
-#if !NET461
+#if !NET462
     /// <inheritdoc />
     public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
     {

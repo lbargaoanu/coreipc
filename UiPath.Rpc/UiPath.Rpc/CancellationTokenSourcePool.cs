@@ -3,7 +3,7 @@ namespace UiPath.Rpc;
 static class CancellationTokenSourcePool
 {
     public static PooledCancellationTokenSource Rent() =>
-#if !NET461
+#if !NET462
         ObjectPool<PooledCancellationTokenSource>.TryRent() ?? new();
 #else
         new();
@@ -14,7 +14,7 @@ static class CancellationTokenSourcePool
         public void Return()
         {
             // If we failed to return to the pool then dispose
-    #if !NET461
+    #if !NET462
             if (!TryReset() || !CancellationTokenSourcePool.Return(this))
     #endif
             {

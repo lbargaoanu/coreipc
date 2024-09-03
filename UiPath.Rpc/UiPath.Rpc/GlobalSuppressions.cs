@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Performance", "HAA0505:Initializer reference type allocation", Scope = "module")]
 [assembly: SuppressMessage("Performance", "HAA0502:Explicit new reference type allocation", Scope = "module")]
 [assembly: SuppressMessage("Performance", "HAA0501:Explicit new array type allocation", Scope = "module")]
-#if NET461
+#if NET462
 namespace System.Runtime.CompilerServices;
 static class IsExternalInit
 {

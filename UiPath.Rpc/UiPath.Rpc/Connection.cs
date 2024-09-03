@@ -114,7 +114,7 @@ public sealed class Connection : IDisposable
             await Network.WriteMessage(messageType, data, cancellationToken).ConfigureAwait(false);
             var lengthBytes = BitConverter.GetBytes(userStream.Length);
             await
-#if NET461
+#if NET462
                 Network.WriteAsync(lengthBytes, 0, lengthBytes.Length, cancellationToken)
 #else
                 Network.WriteAsync(lengthBytes, cancellationToken)
@@ -129,7 +129,7 @@ public sealed class Connection : IDisposable
             tokenRegistration.Dispose();
         }
     }
-#if !NET461
+#if !NET462
     [AsyncMethodBuilder(typeof(PoolingAsyncValueTaskMethodBuilder))]
 #endif
     internal async ValueTask SendMessage(MessageType messageType, RecyclableMemoryStream data, CancellationToken cancellationToken)
@@ -167,7 +167,7 @@ public sealed class Connection : IDisposable
             Completion(requestId)?.SetException(ClosedException);
         }
     }
-#if !NET461
+#if !NET462
     [AsyncMethodBuilder(typeof(PoolingAsyncValueTaskMethodBuilder<>))]
 #endif
     private async ValueTask<bool> ReadHeader(int length)
@@ -177,7 +177,7 @@ public sealed class Connection : IDisposable
         do
         {
             var read = await Network.ReadAsync(
-#if NET461
+#if NET462
                 _header, offset, toRead)
 #else
                 _header.AsMemory(offset, toRead))
@@ -202,7 +202,7 @@ public sealed class Connection : IDisposable
                 ValueTask messageTask;
                 using (_messageStream = NewMessage())
                 {
-#if NET461
+#if NET462
                     await _nestedStream.CopyToAsync(_messageStream).ConfigureAwait(false);
 #else
                     int read;
